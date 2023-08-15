@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Node Task 1</title>
+</head>
+
+<body>
+    <div class="container">
+        <h2 class="mt-5 d-flex justify-content-center">NodeJS Task1 - Hanan Twair</h2>
+        <form action="/api/upload" method="post" class="mt-5" enctype="multipart/form-data">
+            <label for="file">Choose an image file:</label>
+            <div class="row">
+                <input type="file" name="file" id="file" multiple class="form-control w-50 mx-2 shadow mt-1"
+                    accept="image/*">
+                <input type="submit" class="col-lg-5 mx-2 border border-1 border-dark rounded-3 shadow" value="Upload">
+            </div>
+        </form>
+        <div class="row mt-5">
+            <label for="fileName">Enter image name:</label>
+            <input type="text" id="fileName" multiple placeholder="ex, img1.png" class="form-control col-lg-4 w-25 mx-2 shadow mt-1" accept="image/*">
+            <button id="get" onclick="getImage()"
+                class="col-lg-4 mx-2 border border-1 border-dark rounded-3 shadow">View</button>
+            <button id="del" onclick="deleteImage()"
+                class="col-lg-4 mx-2 border border-1 border-dark rounded-3 shadow">Delete</button>
+        </div>
+    </div>
+    <script src="./front.js"></script>
+    <script src="./main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,24 @@
+<%- include('../partials/head') %>
+    <%- include('../partials/header') %>
+        <ul id="imgs" class="list-group">
+            <% files.forEach( (item)=> {
+                let imgName = item.fileName; %>
+                <li class="list-group-item">
+                    <div class="row align-items-center my-3">
+                        <span class="col-lg-4">
+                            <%=imgName%>
+                        </span>
+                        <form method="get" action='/api/files/<%= imgName %>' class="form col-lg-4"
+                            enctype="multipart/form-data">
+                            <button class="form-control w-50 bg-success" onclick="ViewImage()">View</button>
+                        </form>
+                        <div class="col-lg-4">
+                            <button onclick="deleteImage('<%=imgName%>')"
+                                class="form-control w-50 bg-danger">Delete</button>
+                        </div>
+                    </div>
+                </li>
+                <% })%>
+        </ul>
+        <script src="../../front.js"></script>
+        <%- include('../partials/footer') %>

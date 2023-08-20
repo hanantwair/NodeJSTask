@@ -1,0 +1,18 @@
+<%- include('../partials/head') %>
+    <%- include('../partials/header') %>
+
+        <div class="container">
+            <h2 class="mt-5 d-flex justify-content-center">NodeJS Task1 - Hanan Twair</h2>
+            <label for="file">Choose an image file:</label>
+            <input type="file" name="file" id="file" multiple class="form-control w-50 mx-2 shadow mt-1"
+                accept="image/*">
+            <input onclick="uploadImage()" type="submit"
+                class="col-lg-5 mx-2 my-5 border border-1 border-dark rounded-3 shadow py-2" value="Upload">
+            <form method="get" action="/api/allFiles" class="form mt-3" enctype="multipart/form-data">
+                <button id="getImages" class="col-lg-5 mx-2 border border-1 border-dark rounded-3 shadow py-2">All
+                    Images</button>
+            </form>
+        </div>
+        <script src="../../front.js"></script>
+        <script src="../../main.js"></script>
+        <%- include('../partials/footer') %>

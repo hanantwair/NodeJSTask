@@ -25,45 +25,46 @@ const filesSchema = new mongoose.Schema({
 
 const File = mongoose.model('File', filesSchema);
 
+const getExistingFiles = async () => {
+    const existingFiles = await fs.readdirSync('./uploads');
+    return existingFiles;
+};
+
 app.get('/', (req, res) => {
     res.render('pages/index');
 });
 
-app.post('/api/upload', (req, res) => {
+app.post('/api/upload', async (req, res) => {
     if (req.files.file) {
-
-        let file = req.files.file;
-
-        file.mv('./uploads/' + file.name, async (err) => {
-            if (err) throw err;
-            else {
+        const file = req.files.file;
+        try {
+            const existingFiles = await getExistingFiles();
+            if (existingFiles.includes(file.name)) {
+                throw new Error('File already exists');
+            }
+            file.mv('./uploads/' + file.name, async (err) => {
                 const fileObj = new File({
                     fileName: file.name,
                     fileType: file.mimetype,
                     fileSize: file.size,
                 });
-                try {
-                    const result = await fileObj.save();
-                    res.send('File Uploaded!!');
-                }
-                catch (err) {
-                    console.log(err.message);
-                }
-            }
-        });
-
+                await fileObj.save();
+                res.send('File Uploaded!!');
+            });
+        } catch (err) {
+            res.status(404).send(err.message);
+        }
     }
 });
 
 app.get('/api/files/:filename', async (req, res) => {
     const fileName = req.params.filename;
-    const file = await File
-        .find({ fileName: fileName });
-    if (file && file.length) {
+    try {
+        File.find({ fileName: fileName });
         res.render('pages/img', {
             fileName
         });
-    } else {
+    } catch (err) {
         res.status(404).send("This file doesn't exist!!");
     }
 });
@@ -79,13 +80,12 @@ app.get('/api/file/:filename', async (req, res) => {
 
 app.post('/api/files/delete/:filename', async (req, res) => {
     const fileName = req.params.filename;
-    const file = await File
-        .findOneAndRemove({ fileName: fileName });
-    if (file) {
-        let filePath = __dirname + `/uploads/${fileName}`;
+    try {
+        await File.findOneAndRemove({ fileName: fileName });
+        const filePath = __dirname + `/uploads/${fileName}`;
         fs.unlinkSync(filePath);
         res.status(200).send('File was deleted successfully!!');
-    } else {
+    } catch (err) {
         res.status(404).send("This file doesn't exist!!");
     }
 });
@@ -104,5 +104,5 @@ app.get('/api/allFiles', async (req, res) => {
     }
 });
 
-const port = 3500 || process.env.PORT;
+const port = 3500;
 app.listen(port, () => console.log(`Listening on ${port}...`));

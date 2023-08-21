@@ -3,13 +3,16 @@ async function uploadImage() {
     if (files.length) {
         const formData = new FormData();
         formData.append('file', files[0]);
-        if (validateFile(files[0])) {
+        try {
+            validateFile(files[0]);
             const response = await fetch('/api/upload', {
                 method: "POST",
                 body: formData
             });
             const text = await response.text();
             window.alert(text);
+        } catch (err) {
+            window.alert(err);
         }
     } else {
         window.alert('No files!');
@@ -18,15 +21,12 @@ async function uploadImage() {
 
 function validateFile(file) {
     const fileExtension = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/svg", "image/apng", "image/avif"];
-    if (fileExtension.includes(file.type)) {
-        if (file.size >= 8500 && file.size <= 114000) {
-            return true;
-        }
-        window.alert('file size must be between 8661 and 113906');
-        return false;
+    if (!fileExtension.includes(file.type)) {
+        throw new Error("The file must be an image!");
     }
-    window.alert('file type must be one of [jpeg, gif, png, ...]');
-    return false;
+    if (file.size < 8500 || file.size > 114000) {
+        throw new Error("file size must be between 8661 and 113906");
+    }
 }
 
 async function deleteImage(imgName) {
@@ -36,5 +36,4 @@ async function deleteImage(imgName) {
     const text = await response.text();
     window.alert(text);
     window.location.reload();
-
 }
